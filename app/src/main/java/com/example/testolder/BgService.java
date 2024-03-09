@@ -1,62 +1,60 @@
 package com.example.testolder;
 
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import org.json.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 
 public class BgService extends Service {
+    private static  final int NOTIFICATION_ID = 123;
     private final Handler handler = new Handler();
     private Runnable runnable;
 
-//    @Override
-//    public int onStartCommand(Intent intent, int flags, int startId) {
-//        runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                String url = "http://192.168.0.101:8080/check";
-//
-//                new Thread(() -> {
-//                    try {
-//                        String response = http.get(url);
-//
-//                        JSONObject jsonObject = new JSONObject(response);
-//
-//                        int checkValue = jsonObject.getInt("check");
-//                        if (checkValue == 5) {
-//                            NotificationHelper.makeNotification(getApplicationContext(), checkValue);
-//                        }
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }).start();
-//
-//                handler.postDelayed(this, 2000);
-//            }
-//        };
-//
-//        handler.postDelayed(runnable, 2000);
-//        return START_STICKY;
-//    }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        PeriodicWorkRequest fetchReq = new PeriodicWorkRequest.Builder(fetchWorker.class, 2, TimeUnit.SECONDS)
-                .build();
-        WorkManager.getInstance(this).enqueue(fetchReq);
+        Notification notification = NotificationHelper.makeNotification(getApplicationContext(), "stick", 1);
+
+        startForeground(NOTIFICATION_ID, notification);
+
+        int checkValue = intent.getIntExtra("checkValue", 0);
+        // Start your periodic task here
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                // Enqueue a OneTimeWorkRequest to execute the task in the background
+                OneTimeWorkRequest fetchReq = new OneTimeWorkRequest.Builder(fetchWorker.class)
+                        .build();
+                WorkManager.getInstance(getApplicationContext()).enqueue(fetchReq);
+
+                // Schedule the next execution after 2 seconds
+                handler.postDelayed(this, 2000);
+            }
+        };
+        handler.postDelayed(runnable, 2000);
 
         return START_STICKY;
     }
+
+
 
 //    @Override
 //    public void onDestroy () {
@@ -69,3 +67,5 @@ public class BgService extends Service {
         return null;
     }
 }
+
+

@@ -24,7 +24,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String checkValue;
+    public int checkValue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NotificationHelper.makeNotification(getApplicationContext(), 2);
+                NotificationHelper.makeNotification(getApplicationContext(), "Btn activated",2);
             }
         });
 

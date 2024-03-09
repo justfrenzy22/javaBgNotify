@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Testolder"
         tools:targetApi="31">
-        <service android:name=".BgService" />
+        <service android:name=".BgService" android:foregroundServiceType="dataSync" />
+<!--        <service android:name=""-->
         <activity
             android:name=".NotificationActivity"
             android:exported="false" />

@@ -14,9 +14,7 @@ import org.json.JSONObject;
 //    }
 //}
 public class fetchWorker extends Worker {
-//    public DataFetchWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-//        super(context, workerParams);
-//    }
+
 
     public fetchWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
@@ -32,8 +30,9 @@ public class fetchWorker extends Worker {
             JSONObject jsonObject = new JSONObject(response);
 
             int checkValue = jsonObject.getInt("check");
+            String name = jsonObject.getString("name");
             if (checkValue == 5) {
-                NotificationHelper.makeNotification(getApplicationContext(), checkValue);
+                NotificationHelper.makeNotification(getApplicationContext(), name ,checkValue);
             }
 
             return Result.success();

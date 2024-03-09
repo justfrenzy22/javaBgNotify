@@ -1,4 +1,5 @@
 package com.example.testolder;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,7 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NotificationHelper extends AppCompatActivity {
-    public static void makeNotification(Context context, int checkValue) {
+    public static Notification makeNotification(Context context, String name, int checkValue) {
         String channelID = "CHANNEL_ID_NOTIFICATION";
         NotificationCompat.Builder bld = new NotificationCompat.Builder(context, channelID);
 
@@ -24,7 +25,7 @@ public class NotificationHelper extends AppCompatActivity {
 
         bld
                 .setSmallIcon(R.drawable.notify_icon)
-                .setContentTitle("Notification Title")
+                .setContentTitle("🤯 Alert 🤯" + name)
                 .setContentText("Check: " + checkValue)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -54,6 +55,7 @@ public class NotificationHelper extends AppCompatActivity {
         manager.notify(notifyId, bld.build());
 
 
+        return bld.build();
     }
 
     private static int generateNotifyId () {
