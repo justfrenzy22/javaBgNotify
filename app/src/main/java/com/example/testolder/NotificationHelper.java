@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioAttributes;
 import android.net.Uri;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,10 +24,11 @@ public class NotificationHelper extends AppCompatActivity {
 
         Uri soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.alarm);
 
-        bld
+
+                bld
                 .setSmallIcon(R.drawable.notify_icon)
                 .setContentTitle("🤯 Alert 🤯" + name)
-                .setContentText("Check: " + checkValue)
+                .setContentText("Number door : " + checkValue)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSound(soundUri);
@@ -40,16 +42,30 @@ public class NotificationHelper extends AppCompatActivity {
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes. CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes. USAGE_ALARM)
+                    .build();
+
             NotificationChannel channel = manager.getNotificationChannel(channelID);
 
-            if (channel == null) {
+//            if (channel == null) {
                 int importance = NotificationManager.IMPORTANCE_HIGH;
                 channel = new NotificationChannel(channelID, "Some text", importance);
-                channel.setLightColor(Color.GREEN);
-                channel.enableVibration(true);
+
+                channel.enableLights( true );
+                channel.setLightColor( Color.GREEN );
+                channel.enableVibration( true );
+                channel.setVibrationPattern(new long []{100, 200, 300, 400, 500, 400, 300, 200, 400});
+                channel.setSound(soundUri, audioAttributes);
+
                 manager.createNotificationChannel(channel);
-            }
+
+//                channel.setLightColor(Color.GREEN);
+//                channel.enableVibration(true);
+//                manager.createNotificationChannel(channel);
+//            }
         }
 
         manager.notify(notifyId, bld.build());

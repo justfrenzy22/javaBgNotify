@@ -31,9 +31,11 @@ public class fetchWorker extends Worker {
 
             int checkValue = jsonObject.getInt("check");
             String name = jsonObject.getString("name");
-            if (checkValue == 5) {
+            if (checkValue == 1) {
                 NotificationHelper.makeNotification(getApplicationContext(), name ,checkValue);
+//                NotificationHelper.showNotification(getApplicationContext());
             }
+
 
             return Result.success();
         } catch (Exception e) {
