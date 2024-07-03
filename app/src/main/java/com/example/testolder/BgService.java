@@ -40,16 +40,16 @@ public class BgService extends Service {
         runnable = new Runnable() {
             @Override
             public void run() {
+            }
+        };
+        handler.postDelayed(runnable, 2000);
                 // Enqueue a OneTimeWorkRequest to execute the task in the background
                 OneTimeWorkRequest fetchReq = new OneTimeWorkRequest.Builder(fetchWorker.class)
                         .build();
                 WorkManager.getInstance(getApplicationContext()).enqueue(fetchReq);
 
                 // Schedule the next execution after 2 seconds
-                handler.postDelayed(this, 2000);
-            }
-        };
-        handler.postDelayed(runnable, 2000);
+                handler.postDelayed((Runnable) this, 2000);
 
         return START_STICKY;
     }
